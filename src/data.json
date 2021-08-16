@@ -1,0 +1,8 @@
+{
+  "title": {
+    "text": "My chart"
+  },
+  "series": [{
+    "data": [1, 3, 4]
+  }]
+}

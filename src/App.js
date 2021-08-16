@@ -1,25 +1,47 @@
-import logo from './logo.svg';
+import React from 'react';
 import './App.css';
+import Highchart from './Highchart'
+import Table from './Table'
+import {parse} from 'papaparse';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import gamine from './gamine.csv';
+import hookfish from './hookfish.csv';
+
+
+class App extends React.Component {
+    state = {gamine: [], hookfish: []};
+
+    componentDidMount(){
+        parse(gamine, {
+            download: true,
+            header: true,
+            complete: (input) => {
+                input.data.forEach(row => {row.location = 'Gamine'});
+                this.setState({gamine: input.data});
+            }
+        });
+        parse(hookfish, {
+            download: true,
+            header: true,
+            complete: (input) => {
+                input.data.forEach(row => {row.location = 'Hookfish'});
+                this.setState({hookfish: input.data});
+            }
+        });
+    }
+
+    render() {
+        const data = [
+            ...this.state.gamine,
+            ...this.state.hookfish,
+        ];
+        return (
+            <div className="App">
+                <Highchart data={data}/>
+                <Table data={data}/>
+            </div>
+        );
+    }
 }
 
 export default App;
